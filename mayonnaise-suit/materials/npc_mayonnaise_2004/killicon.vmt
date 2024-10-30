@@ -1,0 +1,6 @@
+"UnlitGeneric"
+{
+	"$basetexture" "npc_mayonnaise_2004/mayonnaise_2004"
+	"$translucent" 1
+	"$vertexalpha" 1
+}

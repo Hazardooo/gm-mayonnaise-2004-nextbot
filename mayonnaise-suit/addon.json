@@ -1,0 +1,15 @@
+{
+  "title": "Mayonnaise2004 NextBot",
+  "type": "npc",
+  "tags": [
+    "fun"
+  ],
+  "ignore": [
+    ".idea/*",
+    "*.log",
+    "*.prt",
+    "*.vmf",
+    "*.vmx",
+    "scripts/*"
+  ]
+}
