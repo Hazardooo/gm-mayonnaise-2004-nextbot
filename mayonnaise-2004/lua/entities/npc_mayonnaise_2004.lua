@@ -12,18 +12,18 @@ ENT.PhysgunDisabled = true
 ENT.AutomaticFrameAdvance = false
 -- REMINDER: sounds MUST be at a bitrate of 44100 HZ. If they are not, then the sound will not play.
 ENT.JumpSound = {
-    Sound("npc_mayonnaise_suit/jump.mp3"),
+    Sound("npc_mayonnaise_2004/jump.mp3"),
 }
 ENT.JumpHighSound = {
-    Sound("npc_mayonnaise_suit/jump.mp3"),
+    Sound("npc_mayonnaise_2004/jump.mp3"),
 }
 ENT.TauntSounds = {
-    Sound("npc_mayonnaise_suit/music.mp3"),
-    Sound("npc_mayonnaise_suit/panik.mp3"),
-    Sound("npc_mayonnaise_suit/music.mp3"),
-    Sound("npc_mayonnaise_suit/panik.mp3"),
+    Sound("npc_mayonnaise_2004/music.mp3"),
+    Sound("npc_mayonnaise_2004/panik.mp3"),
+    Sound("npc_mayonnaise_2004/music.mp3"),
+    Sound("npc_mayonnaise_2004/panik.mp3"),
 }
-local chaseMusic = Sound("npc_mayonnaise_suit/music.mp3")
+local chaseMusic = Sound("npc_mayonnaise_2004/music.mp3")
 
 local workshopID = "174117071"
 
@@ -32,62 +32,62 @@ local IsValid = IsValid
 if SERVER then
     -- SERVER --
 
-    local npc_mayonnaise_suit_acquire_distance = CreateConVar("npc_mayonnaise_suit_acquire_distance", 2500, FCVAR_NONE,
-            "The maximum distance at which mayonnaise_suit will chase a target.")
+    local npc_mayonnaise_2004_acquire_distance = CreateConVar("npc_mayonnaise_2004_acquire_distance", 2500, FCVAR_NONE,
+            "The maximum distance at which mayonnaise_2004 will chase a target.")
 
-    local npc_mayonnaise_suit_spawn_protect = CreateConVar("npc_mayonnaise_suit_spawn_protect", 1, FCVAR_NONE,
-            "If set to 1, mayonnaise_suit will not target players or hide within 200 units of \z
+    local npc_mayonnaise_2004_spawn_protect = CreateConVar("npc_mayonnaise_2004_spawn_protect", 1, FCVAR_NONE,
+            "If set to 1, mayonnaise_2004 will not target players or hide within 200 units of \z
             a spawn point.")
 
-    local npc_mayonnaise_suit_attack_distance = CreateConVar("npc_mayonnaise_suit_attack_distance", 80, FCVAR_NONE,
-            "The reach of mayonnaise_suit's attack.")
+    local npc_mayonnaise_2004_attack_distance = CreateConVar("npc_mayonnaise_2004_attack_distance", 80, FCVAR_NONE,
+            "The reach of mayonnaise_2004's attack.")
 
-    local npc_mayonnaise_suit_attack_interval = CreateConVar("npc_mayonnaise_suit_attack_interval", 0.2, FCVAR_NONE,
-            "The delay between mayonnaise_suit's attacks.")
+    local npc_mayonnaise_2004_attack_interval = CreateConVar("npc_mayonnaise_2004_attack_interval", 0.2, FCVAR_NONE,
+            "The delay between mayonnaise_2004's attacks.")
 
-    local npc_mayonnaise_suit_attack_force = CreateConVar("npc_mayonnaise_suit_attack_force", 800, FCVAR_NONE,
-            "The physical force of mayonnaise_suit's attack. Higher values throw things \z
+    local npc_mayonnaise_2004_attack_force = CreateConVar("npc_mayonnaise_2004_attack_force", 800, FCVAR_NONE,
+            "The physical force of mayonnaise_2004's attack. Higher values throw things \z
             farther.")
 
-    local npc_mayonnaise_suit_smash_props = CreateConVar("npc_mayonnaise_suit_smash_props", 1, FCVAR_NONE,
-            "If set to 1, mayonnaise_suit will punch through any props placed in their way.")
+    local npc_mayonnaise_2004_smash_props = CreateConVar("npc_mayonnaise_2004_smash_props", 1, FCVAR_NONE,
+            "If set to 1, mayonnaise_2004 will punch through any props placed in their way.")
 
-    local npc_mayonnaise_suit_allow_jump = CreateConVar("npc_mayonnaise_suit_allow_jump", 1, FCVAR_NONE,
-            "If set to 1, mayonnaise_suit will be able to jump.")
+    local npc_mayonnaise_2004_allow_jump = CreateConVar("npc_mayonnaise_2004_allow_jump", 1, FCVAR_NONE,
+            "If set to 1, mayonnaise_2004 will be able to jump.")
 
-    local npc_mayonnaise_suit_hiding_scan_interval = CreateConVar("npc_mayonnaise_suit_hiding_scan_interval", 3, FCVAR_NONE,
-            "mayonnaise_suit will only seek out hiding places every X seconds. This can be an \z
+    local npc_mayonnaise_2004_hiding_scan_interval = CreateConVar("npc_mayonnaise_2004_hiding_scan_interval", 3, FCVAR_NONE,
+            "mayonnaise_2004 will only seek out hiding places every X seconds. This can be an \z
             expensive operation, so it is not recommended to lower this too much. \z
-            However, if distant mayonnaise_suits are not hiding from you quickly enough, you \z
+            However, if distant mayonnaise_2004s are not hiding from you quickly enough, you \z
             may consider lowering this a small amount.")
 
-    local npc_mayonnaise_suit_hiding_repath_interval = CreateConVar("npc_mayonnaise_suit_hiding_repath_interval", 1, FCVAR_NONE,
-            "The path to mayonnaise_suit's hiding spot will be redetermined every X seconds.")
+    local npc_mayonnaise_2004_hiding_repath_interval = CreateConVar("npc_mayonnaise_2004_hiding_repath_interval", 1, FCVAR_NONE,
+            "The path to mayonnaise_2004's hiding spot will be redetermined every X seconds.")
 
-    local npc_mayonnaise_suit_chase_repath_interval = CreateConVar("npc_mayonnaise_suit_chase_repath_interval", 0.1, FCVAR_NONE,
-            "The path to and position of mayonnaise_suit's target will be redetermined every \z
+    local npc_mayonnaise_2004_chase_repath_interval = CreateConVar("npc_mayonnaise_2004_chase_repath_interval", 0.1, FCVAR_NONE,
+            "The path to and position of mayonnaise_2004's target will be redetermined every \z
             X seconds.")
 
-    local npc_mayonnaise_suit_expensive_scan_interval = CreateConVar("npc_mayonnaise_suit_expensive_scan_interval", 1, FCVAR_NONE,
+    local npc_mayonnaise_2004_expensive_scan_interval = CreateConVar("npc_mayonnaise_2004_expensive_scan_interval", 1, FCVAR_NONE,
             "Slightly expensive operations (distance calculations and entity \z
             searching) will occur every X seconds.")
 
-    local npc_mayonnaise_suit_force_download = CreateConVar("npc_mayonnaise_suit_force_download", 1, FCVAR_ARCHIVE,
-            "If set to 1, clients will be forced to download mayonnaise_suit resources \z
+    local npc_mayonnaise_2004_force_download = CreateConVar("npc_mayonnaise_2004_force_download", 1, FCVAR_ARCHIVE,
+            "If set to 1, clients will be forced to download mayonnaise_2004 resources \z
             (restart required after changing).\n\z
             WARNING: If this option is disabled, clients will be unable to see or \z
-            hear mayonnaise_suit!")
+            hear mayonnaise_2004!")
 
     -- So we don't spam voice TOO much.
     local TAUNT_INTERVAL = 1.2
     local PATH_INFRACTION_TIMEOUT = 5
 
-    if npc_mayonnaise_suit_force_download:GetBool() then
+    if npc_mayonnaise_2004_force_download:GetBool() then
         resource.AddWorkshop(workshopID)
     end
 
-    util.AddNetworkString("mayonnaise_suit_nag")
-    util.AddNetworkString("mayonnaise_suit_navgen")
+    util.AddNetworkString("mayonnaise_2004_nag")
+    util.AddNetworkString("mayonnaise_2004_navgen")
 
     -- Pathfinding is only concerned with static geometry anyway.
     local trace = {
@@ -125,10 +125,10 @@ if SERVER then
         return false
     end
 
-    local VECTOR_mayonnaise_suit_HEIGHT = Vector(0, 0, 96)
-    local function isPointSuitableForHiding(point)
+    local VECTOR_mayonnaise_2004_HEIGHT = Vector(0, 0, 96)
+    local function isPoint2004ableForHiding(point)
         trace.start = point
-        trace.endpos = point + VECTOR_mayonnaise_suit_HEIGHT
+        trace.endpos = point + VECTOR_mayonnaise_2004_HEIGHT
         local tr = util.TraceLine(trace)
 
         return (not tr.Hit)
@@ -146,7 +146,7 @@ if SERVER then
         local goodSpots, badSpots = 0, 0
         for _, area in pairs(areas) do
             for _, hidingSpot in pairs(area:GetHidingSpots()) do
-                if isPointSuitableForHiding(hidingSpot) then
+                if isPoint2004ableForHiding(hidingSpot) then
                     g_hidingSpots[goodSpots + 1] = {
                         pos = hidingSpot,
                         nearSpawn = isPointNearSpawn(hidingSpot, 200),
@@ -159,7 +159,7 @@ if SERVER then
             end
         end
 
-        print(string.format("npc_mayonnaise_suit: found %d suitable (%d unsuitable) hiding \z
+        print(string.format("npc_mayonnaise_2004: found %d 2004able (%d un2004able) hiding \z
 		places in %d areas over %.2fms!", goodSpots, badSpots, #areas,
                 (SysTime() - rStart) * 1000))
     end
@@ -179,27 +179,27 @@ if SERVER then
             return ent:Alive()
         end
 
-        -- Ignore dead NPCs, other mayonnaise_suits, and dummy NPCs.
+        -- Ignore dead NPCs, other mayonnaise_2004s, and dummy NPCs.
         local class = ent:GetClass()
         return (ent:IsNPC()
                 and ent:Health() > 0
-                and class ~= "npc_mayonnaise_suit"
+                and class ~= "npc_mayonnaise_2004"
                 and not class:find("bullseye"))
     end
 
-    hook.Add("PlayerSpawnedNPC", "mayonnaise_suitMissingNavmeshNag", function(ply, ent)
+    hook.Add("PlayerSpawnedNPC", "mayonnaise_2004MissingNavmeshNag", function(ply, ent)
         if not IsValid(ent) then
             return
         end
-        if ent:GetClass() ~= "npc_mayonnaise_suit" then
+        if ent:GetClass() ~= "npc_mayonnaise_2004" then
             return
         end
         if navmesh.GetNavAreaCount() > 0 then
             return
         end
 
-        -- Try to explain why mayonnaise_suit isn't working.
-        net.Start("mayonnaise_suit_nag")
+        -- Try to explain why mayonnaise_2004 isn't working.
+        net.Start("mayonnaise_2004_nag")
         net.Send(ply)
     end)
 
@@ -208,9 +208,9 @@ if SERVER then
         local timeElapsedStr = string.NiceTime(SysTime() - generateStart)
 
         if not navmesh.IsGenerating() then
-            print("npc_mayonnaise_suit: Navmesh generation completed in " .. timeElapsedStr)
+            print("npc_mayonnaise_2004: Navmesh generation completed in " .. timeElapsedStr)
         else
-            print("npc_mayonnaise_suit: Navmesh generation aborted after " .. timeElapsedStr)
+            print("npc_mayonnaise_2004: Navmesh generation aborted after " .. timeElapsedStr)
         end
 
         -- Turn this back off.
@@ -297,7 +297,7 @@ if SERVER then
         addEntitiesToSet(seeds, GAMEMODE.SpawnPoints or {})
 
         if next(seeds, nil) == nil then
-            print("npc_mayonnaise_suit: Couldn't find any places to seed nav_generate")
+            print("npc_mayonnaise_2004: Couldn't find any places to seed nav_generate")
             return false
         end
 
@@ -313,17 +313,17 @@ if SERVER then
             local tr = util.TraceLine(trace)
 
             if not tr.StartSolid and tr.Hit then
-                print(string.format("npc_mayonnaise_suit: Adding seed %s at %s", seed, pos))
+                print(string.format("npc_mayonnaise_2004: Adding seed %s at %s", seed, pos))
                 navmesh.AddWalkableSeed(tr.HitPos, tr.HitNormal)
             else
-                print(string.format("npc_mayonnaise_suit: Couldn't add seed %s at %s", seed,
+                print(string.format("npc_mayonnaise_2004: Couldn't add seed %s at %s", seed,
                         pos))
             end
         end
 
         -- The least we can do is ensure they don't have to listen to this noise.
-        for _, mayonnaise_suit in pairs(ents.FindByClass("npc_mayonnaise_suit")) do
-            mayonnaise_suit:Remove()
+        for _, mayonnaise_2004 in pairs(ents.FindByClass("npc_mayonnaise_2004")) do
+            mayonnaise_2004:Remove()
         end
 
         -- This isn't strictly necessary since we just added EVERY spawnpoint as a
@@ -334,16 +334,16 @@ if SERVER then
 
         if navmesh.IsGenerating() then
             generateStart = SysTime()
-            hook.Add("ShutDown", "mayonnaise_suitNavGen", navEndGenerate)
+            hook.Add("ShutDown", "mayonnaise_2004NavGen", navEndGenerate)
         else
-            print("npc_mayonnaise_suit: nav_generate failed to initialize")
+            print("npc_mayonnaise_2004: nav_generate failed to initialize")
             navmesh.ClearWalkableSeeds()
         end
 
         return navmesh.IsGenerating()
     end
 
-    concommand.Add("npc_mayonnaise_suit_learn", function(ply, cmd, args)
+    concommand.Add("npc_mayonnaise_2004_learn", function(ply, cmd, args)
         if navmesh.IsGenerating() then
             return
         end
@@ -351,9 +351,9 @@ if SERVER then
         -- Rcon or single-player only.
         local isConsole = (ply:EntIndex() == 0)
         if game.SinglePlayer() then
-            print("npc_mayonnaise_suit: Beginning nav_generate requested by " .. ply:Name())
+            print("npc_mayonnaise_2004: Beginning nav_generate requested by " .. ply:Name())
 
-            -- Disable expensive computations in single-player. mayonnaise_suit doesn't use
+            -- Disable expensive computations in single-player. mayonnaise_2004 doesn't use
             -- their results, and it consumes a massive amount of time and CPU.
             -- We'd do this on dedicated servers as well, except that sv_cheats
             -- needs to be enabled in order to disable visibility computations.
@@ -363,7 +363,7 @@ if SERVER then
             -- Enable developer mode so we can see console messages in the corner.
             RunConsoleCommand("developer", "1")
         elseif isConsole then
-            print("npc_mayonnaise_suit: Beginning nav_generate requested by server console")
+            print("npc_mayonnaise_2004: Beginning nav_generate requested by server console")
         else
             return
         end
@@ -373,7 +373,7 @@ if SERVER then
         -- If it fails, only the person who started it needs to know.
         local recipients = (success and player.GetHumans() or { ply })
 
-        net.Start("mayonnaise_suit_navgen")
+        net.Start("mayonnaise_2004_navgen")
         net.WriteBool(success)
         net.Send(recipients)
     end)
@@ -442,7 +442,7 @@ if SERVER then
 
     function ENT:GetNearestTarget()
         -- Only target entities within the acquire distance.
-        local maxAcquireDist = npc_mayonnaise_suit_acquire_distance:GetInt()
+        local maxAcquireDist = npc_mayonnaise_2004_acquire_distance:GetInt()
         local maxAcquireDistSqr = maxAcquireDist * maxAcquireDist
         local myPos = self:GetPos()
         local acquirableEntities = ents.FindInSphere(myPos, maxAcquireDist)
@@ -458,9 +458,9 @@ if SERVER then
             end
 
             -- Spawn protection! Ignore players within 200 units of a spawn point
-            -- if `npc_mayonnaise_suit_spawn_protect' = 1.
+            -- if `npc_mayonnaise_2004_spawn_protect' = 1.
             --TODO: Only for the first few seconds?
-            if npc_mayonnaise_suit_spawn_protect:GetBool() and ent:IsPlayer()
+            if npc_mayonnaise_2004_spawn_protect:GetBool() and ent:IsPlayer()
                     and isPointNearSpawn(ent:GetPos(), 200)
             then
                 continue
@@ -479,7 +479,7 @@ if SERVER then
 
     --TODO: Giant ugly monolith of a function eww eww eww.
     function ENT:AttackNearbyTargets(radius)
-        local attackForce = npc_mayonnaise_suit_attack_force:GetInt()
+        local attackForce = npc_mayonnaise_2004_attack_force:GetInt()
         local hitSource = self:LocalToWorld(self:OBBCenter())
         local nearEntities = ents.FindInSphere(hitSource, radius)
         local hit = false
@@ -516,7 +516,7 @@ if SERVER then
                 end
 
                 local hitDirection = (ent:GetPos() - hitSource):GetNormal()
-                -- Give the player a good whack. mayonnaise_suit means business.
+                -- Give the player a good whack. mayonnaise_2004 means business.
                 -- This is for those with god mode enabled.
                 ent:SetVelocity(hitDirection * attackForce + vector_up * 500)
 
@@ -534,7 +534,7 @@ if SERVER then
                 -- Hits only count if we dealt some damage.
                 hit = (hit or (newHealth < health))
             elseif ent:GetMoveType() == MOVETYPE_VPHYSICS then
-                if not npc_mayonnaise_suit_smash_props:GetBool() then
+                if not npc_mayonnaise_2004_smash_props:GetBool() then
                     continue
                 end
                 if ent:IsVehicle() and IsValid(ent:GetDriver()) then
@@ -642,7 +642,7 @@ if SERVER then
     end
 
     local HIGH_JUMP_HEIGHT = 500
-    function ENT:Atmayonnaise_suittJumpAtTarget()
+    function ENT:Atmayonnaise_2004tJumpAtTarget()
         -- No double-jumping.
         if not self:IsOnGround() then
             return
@@ -651,7 +651,7 @@ if SERVER then
         local targetPos = self.CurrentTarget:GetPos()
         local xyDistSqr = (targetPos - self:GetPos()):Length2DSqr()
         local zDifference = targetPos.z - self:GetPos().z
-        local maxAttackDistance = npc_mayonnaise_suit_attack_distance:GetInt()
+        local maxAttackDistance = npc_mayonnaise_2004_attack_distance:GetInt()
         if xyDistSqr <= math.pow(maxAttackDistance + 200, 2)
                 and zDifference >= maxAttackDistance
         then
@@ -715,7 +715,7 @@ if SERVER then
 
         local currentTime = CurTime()
 
-        local scanInterval = npc_mayonnaise_suit_expensive_scan_interval:GetFloat()
+        local scanInterval = npc_mayonnaise_2004_expensive_scan_interval:GetFloat()
         if currentTime - self.LastTargetSearch > scanInterval then
             local target = self:GetNearestTarget()
 
@@ -734,9 +734,9 @@ if SERVER then
             self.LastHidingPlaceScan = 0
 
             -- Attack anyone nearby while we're rampaging.
-            local attackInterval = npc_mayonnaise_suit_attack_interval:GetFloat()
+            local attackInterval = npc_mayonnaise_2004_attack_interval:GetFloat()
             if currentTime - self.LastAttack > attackInterval then
-                local attackDistance = npc_mayonnaise_suit_attack_distance:GetInt()
+                local attackDistance = npc_mayonnaise_2004_attack_distance:GetInt()
                 if self:AttackNearbyTargets(attackDistance) then
                     if currentTime - self.LastTaunt > TAUNT_INTERVAL then
                         self.LastTaunt = currentTime
@@ -751,7 +751,7 @@ if SERVER then
             end
 
             -- Recompute the path to the target every so often.
-            local repathInterval = npc_mayonnaise_suit_chase_repath_interval:GetFloat()
+            local repathInterval = npc_mayonnaise_2004_chase_repath_interval:GetFloat()
             if currentTime - self.LastPathRecompute > repathInterval then
                 self.LastPathRecompute = currentTime
                 self:RecomputeTargetPath()
@@ -761,14 +761,14 @@ if SERVER then
             self.MovePath:Update(self)
 
             -- Try to jump at a target in the air.
-            if self:IsOnGround() and npc_mayonnaise_suit_allow_jump:GetBool()
+            if self:IsOnGround() and npc_mayonnaise_2004_allow_jump:GetBool()
                     and currentTime - self.LastJumpScan >= scanInterval
             then
-                self:Atmayonnaise_suittJumpAtTarget()
+                self:Atmayonnaise_2004tJumpAtTarget()
                 self.LastJumpScan = currentTime
             end
         else
-            local hidingScanInterval = npc_mayonnaise_suit_hiding_scan_interval:GetFloat()
+            local hidingScanInterval = npc_mayonnaise_2004_hiding_scan_interval:GetFloat()
             if currentTime - self.LastHidingPlaceScan >= hidingScanInterval then
                 self.LastHidingPlaceScan = currentTime
 
@@ -778,7 +778,7 @@ if SERVER then
             end
 
             if self.HidingSpot ~= nil then
-                local hidingInterval = npc_mayonnaise_suit_hiding_repath_interval:GetFloat()
+                local hidingInterval = npc_mayonnaise_2004_hiding_repath_interval:GetFloat()
                 if currentTime - self.LastPathRecompute >= hidingInterval then
                     self.LastPathRecompute = currentTime
                     self.MovePath:Compute(self, self.HidingSpot.pos)
@@ -845,48 +845,48 @@ if SERVER then
 else
     -- CLIENT --
 
-    local MAT_mayonnaise_suit = Material("npc_mayonnaise_suit/mayonnaise_suit")
-    killicon.Add("npc_mayonnaise_suit", "npc_mayonnaise_suit/killicon", color_white)
-    language.Add("npc_mayonnaise_suit", "mayonnaise_suit")
+    local MAT_mayonnaise_2004 = Material("npc_mayonnaise_2004/mayonnaise_2004")
+    killicon.Add("npc_mayonnaise_2004", "npc_mayonnaise_2004/killicon", color_white)
+    language.Add("npc_mayonnaise_2004", "mayonnaise_2004")
 
     ENT.RenderGroup = RENDERGROUP_TRANSLUCENT
 
     local developer = GetConVar("developer")
     local function DevPrint(devLevel, msg)
         if developer:GetInt() >= devLevel then
-            print("npc_mayonnaise_suit: " .. msg)
+            print("npc_mayonnaise_2004: " .. msg)
         end
     end
 
     local panicMusic = nil
-    local lastPanic = 0 -- The last time we were in music range of a mayonnaise_suit.
+    local lastPanic = 0 -- The last time we were in music range of a mayonnaise_2004.
 
     --TODO: Why don't these flags show up? Bug? Documentation would be lovely.
-    local npc_mayonnaise_suit_music_volume = CreateConVar("npc_mayonnaise_suit_music_volume", 1,
+    local npc_mayonnaise_2004_music_volume = CreateConVar("npc_mayonnaise_2004_music_volume", 1,
             bit.bor(FCVAR_DEMO, FCVAR_ARCHIVE),
-            "Maximum music volume when being chased by mayonnaise_suit. (0-1, where 0 is muted)")
+            "Maximum music volume when being chased by mayonnaise_2004. (0-1, where 0 is muted)")
 
-    -- If another mayonnaise_suit comes in range before this delay is up,
+    -- If another mayonnaise_2004 comes in range before this delay is up,
     -- the music will continue where it left off.
     local MUSIC_RESTART_DELAY = 2
 
-    -- Beyond this distance, mayonnaise_suits do not count to music volume.
+    -- Beyond this distance, mayonnaise_2004s do not count to music volume.
     local MUSIC_CUTOFF_DISTANCE = 1000
 
-    -- Max volume is achieved when MUSIC_mayonnaise_suit_PANIC_COUNT mayonnaise_suits are this close,
+    -- Max volume is achieved when MUSIC_mayonnaise_2004_PANIC_COUNT mayonnaise_2004s are this close,
     -- or an equivalent score.
     local MUSIC_PANIC_DISTANCE = 200
 
-    -- That's a lot of mayonnaise_suit.
-    local MUSIC_mayonnaise_suit_PANIC_COUNT = 8
+    -- That's a lot of mayonnaise_2004.
+    local MUSIC_mayonnaise_2004_PANIC_COUNT = 8
 
-    local MUSIC_mayonnaise_suit_MAX_DISTANCE_SCORE = (MUSIC_CUTOFF_DISTANCE - MUSIC_PANIC_DISTANCE) * MUSIC_mayonnaise_suit_PANIC_COUNT
+    local MUSIC_mayonnaise_2004_MAX_DISTANCE_SCORE = (MUSIC_CUTOFF_DISTANCE - MUSIC_PANIC_DISTANCE) * MUSIC_mayonnaise_2004_PANIC_COUNT
 
     local function updatePanicMusic()
-        if #ents.FindByClass("npc_mayonnaise_suit") == 0 then
+        if #ents.FindByClass("npc_mayonnaise_2004") == 0 then
             -- Whoops. No need to run for now.
             DevPrint(4, "Halting music timer.")
-            timer.Remove("mayonnaise_suitPanicMusicUpdate")
+            timer.Remove("mayonnaise_2004PanicMusicUpdate")
 
             if panicMusic ~= nil then
                 panicMusic:Stop()
@@ -904,7 +904,7 @@ else
             end
         end
 
-        local userVolume = math.Clamp(npc_mayonnaise_suit_music_volume:GetFloat(), 0, 1)
+        local userVolume = math.Clamp(npc_mayonnaise_2004_music_volume:GetFloat(), 0, 1)
         if userVolume == 0 or not IsValid(LocalPlayer()) then
             panicMusic:Stop()
             return
@@ -913,7 +913,7 @@ else
         local totalDistanceScore = 0
         local nearEntities = ents.FindInSphere(LocalPlayer():GetPos(), 1000)
         for _, ent in pairs(nearEntities) do
-            if IsValid(ent) and ent:GetClass() == "npc_mayonnaise_suit" then
+            if IsValid(ent) and ent:GetClass() == "npc_mayonnaise_2004" then
                 local distanceScore = math.max(0, MUSIC_CUTOFF_DISTANCE
                         - LocalPlayer():GetPos():Distance(ent:GetPos()))
                 totalDistanceScore = totalDistanceScore + distanceScore
@@ -921,7 +921,7 @@ else
         end
 
         local musicVolume = math.min(1,
-                totalDistanceScore / MUSIC_mayonnaise_suit_MAX_DISTANCE_SCORE)
+                totalDistanceScore / MUSIC_mayonnaise_2004_MAX_DISTANCE_SCORE)
 
         local shouldRestartMusic = (CurTime() - lastPanic >= MUSIC_RESTART_DELAY)
         if musicVolume > 0 then
@@ -930,7 +930,7 @@ else
             end
 
             if not LocalPlayer():Alive() then
-                -- Quiet down so we can hear mayonnaise_suit taunt us.
+                -- Quiet down so we can hear mayonnaise_2004 taunt us.
                 musicVolume = musicVolume / 4
             end
 
@@ -953,8 +953,8 @@ else
 
     local REPEAT_FOREVER = 0
     local function startTimer()
-        if not timer.Exists("mayonnaise_suitPanicMusicUpdate") then
-            timer.Create("mayonnaise_suitPanicMusicUpdate", 0.05, REPEAT_FOREVER,
+        if not timer.Exists("mayonnaise_2004PanicMusicUpdate") then
+            timer.Create("mayonnaise_2004PanicMusicUpdate", 0.05, REPEAT_FOREVER,
                     updatePanicMusic)
             DevPrint(4, "Beginning music timer.")
         end
@@ -973,9 +973,9 @@ else
 
     local DRAW_OFFSET = SPRITE_SIZE / 2 * vector_up
     function ENT:DrawTranslucent()
-        render.SetMaterial(MAT_mayonnaise_suit)
+        render.SetMaterial(MAT_mayonnaise_2004)
 
-        -- Get the normal vector from mayonnaise_suit to the player's eyes, and then compute
+        -- Get the normal vector from mayonnaise_2004 to the player's eyes, and then compute
         -- a corresponding projection onto the xy-plane.
         local pos = self:GetPos() + DRAW_OFFSET
         local normal = EyePos() - pos
@@ -983,7 +983,7 @@ else
         local xyNormal = Vector(normal.x, normal.y, 0)
         xyNormal:Normalize()
 
-        -- mayonnaise_suit should only look 1/3 of the way up to the player so that they
+        -- mayonnaise_2004 should only look 1/3 of the way up to the player so that they
         -- don't appear to lay flat from above.
         local pitch = math.acos(math.Clamp(normal:Dot(xyNormal), -1, 1)) / 3
         local cos = math.cos(pitch)
@@ -997,12 +997,12 @@ else
                 color_white, 180)
     end
 
-    surface.CreateFont("mayonnaise_suitHUD", {
+    surface.CreateFont("mayonnaise_2004HUD", {
         font = "Arial",
         size = 56
     })
 
-    surface.CreateFont("mayonnaise_suitHUDSmall", {
+    surface.CreateFont("mayonnaise_2004HUDSmall", {
         font = "Arial",
         size = 24
     })
@@ -1047,19 +1047,19 @@ else
     local lastBracket = 0
     local generateStart = 0
     local function navGenerateHUDOverlay()
-        draw.SimpleTextOutlined("mayonnaise_suit is studying this map.", "mayonnaise_suitHUD",
+        draw.SimpleTextOutlined("mayonnaise_2004 is studying this map.", "mayonnaise_2004HUD",
                 ScrW() / 2, ScrH() / 2, color_white,
                 TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2, color_black)
-        draw.SimpleTextOutlined("Please wait...", "mayonnaise_suitHUD",
+        draw.SimpleTextOutlined("Please wait...", "mayonnaise_2004HUD",
                 ScrW() / 2, ScrH() / 2, color_white,
                 TEXT_ALIGN_CENTER, TEXT_ALIGN_BOTTOM, 2, color_black)
 
         local elapsed = SysTime() - generateStart
         local elapsedStr = string_ToHMS(elapsed)
-        draw.SimpleTextOutlined("Time Elapsed:", "mayonnaise_suitHUDSmall",
+        draw.SimpleTextOutlined("Time Elapsed:", "mayonnaise_2004HUDSmall",
                 ScrW() / 2, ScrH() * 3 / 4, color_white,
                 TEXT_ALIGN_CENTER, TEXT_ALIGN_BOTTOM, 1, color_black)
-        draw.SimpleTextOutlined(elapsedStr, "mayonnaise_suitHUDSmall",
+        draw.SimpleTextOutlined(elapsedStr, "mayonnaise_2004HUDSmall",
                 ScrW() / 2, ScrH() * 3 / 4, color_white,
                 TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 1, color_black)
 
@@ -1069,19 +1069,19 @@ else
             flavourText = table.Random(flavourTexts[math.min(5, textBracket)])
             lastBracket = textBracket
         end
-        draw.SimpleTextOutlined(flavourText, "mayonnaise_suitHUDSmall",
+        draw.SimpleTextOutlined(flavourText, "mayonnaise_2004HUDSmall",
                 ScrW() / 2, ScrH() * 4 / 5, color_yellow,
                 TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
     end
 
-    net.Receive("mayonnaise_suit_navgen", function()
+    net.Receive("mayonnaise_2004_navgen", function()
         local startSuccess = net.ReadBool()
         if startSuccess then
             generateStart = SysTime()
             lastBracket = 0
-            hook.Add("HUDPaint", "mayonnaise_suitNavGenOverlay", navGenerateHUDOverlay)
+            hook.Add("HUDPaint", "mayonnaise_2004NavGenOverlay", navGenerateHUDOverlay)
         else
-            Derma_Message("Oh no. mayonnaise_suit doesn't even know where to start with \z
+            Derma_Message("Oh no. mayonnaise_2004 doesn't even know where to start with \z
 		this map.\n\z
 		If you're not running the Sandbox gamemode, switch to that and try \z
 		again.", "Error!")
@@ -1091,7 +1091,7 @@ else
     local nagMe = true
 
     local function requestNavGenerate()
-        RunConsoleCommand("npc_mayonnaise_suit_learn")
+        RunConsoleCommand("npc_mayonnaise_2004_learn")
     end
 
     local function stopNagging()
@@ -1099,7 +1099,7 @@ else
     end
 
     local function navWarning()
-        Derma_Query("It will take a while (possibly hours) for mayonnaise_suit to figure \z
+        Derma_Query("It will take a while (possibly hours) for mayonnaise_2004 to figure \z
 		this map out.\n\z
 		While he's studying it, you won't be able to play,\n\z
 		and the game will appear to have frozen/crashed.\n\z
@@ -1110,32 +1110,32 @@ else
                 "Not right now.", nil)
     end
 
-    net.Receive("mayonnaise_suit_nag", function()
+    net.Receive("mayonnaise_2004_nag", function()
         if not nagMe then
             return
         end
 
         if game.SinglePlayer() then
-            Derma_Query("Uh oh! mayonnaise_suit doesn't know this map.\n\z
+            Derma_Query("Uh oh! mayonnaise_2004 doesn't know this map.\n\z
 			Would you like him to learn it?",
-                    "This map is not yet mayonnaise_suit-compatible!",
+                    "This map is not yet mayonnaise_2004-compatible!",
                     "Yes", navWarning,
                     "No", nil,
                     "No. Don't ask again.", stopNagging)
         else
-            Derma_Query("Uh oh! mayonnaise_suit doesn't know this map. \z
+            Derma_Query("Uh oh! mayonnaise_2004 doesn't know this map. \z
 			He won't be able to move!\n\z
 			Because you're not in a single-player game, he isn't able to \z
 			learn it.\n\z
 			\n\z
-			Ask the server host about teaching this map to mayonnaise_suit.\n\z
+			Ask the server host about teaching this map to mayonnaise_2004.\n\z
 			\n\z
-			If you ARE the server host, you can run npc_mayonnaise_suit_learn over \z
+			If you ARE the server host, you can run npc_mayonnaise_2004_learn over \z
 			rcon.\n\z
 			Keep in mind that it may take hours during which you will be \z
 			unable\n\z
 			to play, and THE MAP WILL BE RESTARTED.",
-                    "This map is currently not mayonnaise_suit-compatible!",
+                    "This map is currently not mayonnaise_2004-compatible!",
                     "Ok", nil,
                     "Ok. Don't say this again.", stopNagging)
         end
@@ -1146,9 +1146,9 @@ end
 --
 -- List the NPC as spawnable.
 --
-list.Set("NPC", "npc_mayonnaise_suit", {
-    Name = "mayonnaise_suit",
-    Class = "npc_mayonnaise_suit",
+list.Set("NPC", "npc_mayonnaise_2004", {
+    Name = "mayonnaise_2004",
+    Class = "npc_mayonnaise_2004",
     Category = "Nextbot",
     AdminOnly = true
 })
